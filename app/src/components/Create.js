@@ -64,12 +64,11 @@ class Create extends Component {
   async create (e) {
     e.preventDefault()
     try {
-      const res = await this.props.create({
+      await this.props.create({
         title: this.state.title,
         tags: this.state.tags.concat(this.state.newTags),
         body: this.state.body
       })
-      console.log(res.data)
     } catch (err) {
       this.setState({
         title: '',

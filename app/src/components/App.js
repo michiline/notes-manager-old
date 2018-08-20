@@ -26,7 +26,7 @@ class App extends Component {
     }
   }
   async componentDidMount () {
-    // this.refreshNotes()
+    this.refreshNotes()
     this.getExistingTags()
   }
   render () {
@@ -67,7 +67,10 @@ class App extends Component {
     let notesArr = await Promise.all(notesPromise)
     let notes = {}
     this.state.favoriteTags.forEach((tag, index) => {
-      notes[tag] = notesArr[index].data
+      notes[tag] = notesArr[index].data.map(note => {
+        note._createdAt = new Date(note._createdAt.substr(0, note._createdAt.length - 5))
+        return note
+      })
     })
     localStorage.setItem('notes', JSON.stringify(notes))
     this.setState({
@@ -87,8 +90,12 @@ class App extends Component {
     let notesArr = await Promise.all(notesPromise)
     let notes = {}
     favoriteTags.forEach((tag, index) => {
-      notes[tag] = notesArr[index].data
+      notes[tag] = notesArr[index].data.map(note => {
+        note._createdAt = new Date(note._createdAt.substr(0, note._createdAt.length - 5))
+        return note
+      })
     })
+    console.log(notes)
     localStorage.setItem('favoriteTags', JSON.stringify(favoriteTags))
     localStorage.setItem('notes', JSON.stringify(notes))
     this.setState({

@@ -30,6 +30,7 @@ function mapNote (note) {
   return {
     tags: note.tags,
     title: note.title,
-    body: note.body
+    body: note.body,
+    createdAt: note._createdAt
   }
 }

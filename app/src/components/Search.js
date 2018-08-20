@@ -42,11 +42,10 @@ class Search extends Component {
   async search (e) {
     e.preventDefault()
     try {
-      const res = await this.props.search({
+      await this.props.search({
         tags: splitString(this.state.tags),
         words: splitString(this.state.words)
       })
-      console.log(res.data)
     } catch (err) {
       this.setState({
         tags: '',

@@ -33,7 +33,6 @@ class Home extends Component {
         <div className='row'>
           <div className='col-lg'>
             {Object.entries(this.props.notes).map((entry, index) => {
-              console.log(entry)
               return (
                 <div className='tab-content' id='nav-tabContent' key={index}>
                   <div className={this.props.tab === '#' + entry[0] ? 'tab-pane fade show active' : 'tab-pane fade show'}>
@@ -44,6 +43,7 @@ class Home extends Component {
                             <h5 className='card-title'>{note.title}</h5>
                             <h6 className='card-subtitle mb-2 text-muted'>{prepareTags(note.tags)}</h6>
                             <p className='card-text'>{note.body}</p>
+                            <p className='card-text'><small className='text-muted'>Created on: {note._createdAt.toLocaleString('hr-HR', { timeZone: 'CET' }) }</small></p>
                           </div>
                         </div>
                       )
