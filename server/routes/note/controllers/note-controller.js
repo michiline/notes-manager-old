@@ -9,5 +9,23 @@ export default {
       console.log(err)
       return next(err)
     }
+  },
+  async get (req, res, next) {
+    try {
+      req.notes = await noteRepo.get(req.query)
+      return next()
+    } catch (err) {
+      console.log(err)
+      return next(err)
+    }
+  },
+  async existingTags (req, res, next) {
+    try {
+      req.tags = await noteRepo.existingTags()
+      return next()
+    } catch (err) {
+      console.log(err)
+      return next(err)
+    }
   }
 }

@@ -16,5 +16,21 @@ router.post('/',
   success.create,
   error.create
 )
+router.get('/',
+  noteValidate.get,
+  noteController.get,
+  log.success,
+  log.error,
+  success.get,
+  error.get
+)
+router.get('/tags',
+  noteValidate.existingTags,
+  noteController.existingTags,
+  log.success,
+  log.error,
+  success.existingTags,
+  error.existingTags
+)
 
 export default router

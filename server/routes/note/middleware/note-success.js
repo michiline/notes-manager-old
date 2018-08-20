@@ -6,6 +6,16 @@ export default {
     req.message = message.success.noteCreated
     req.data = mapNote(req.note)
     return sendResponse(req, res)
+  },
+  get (req, res) {
+    req.status = 200
+    req.data = req.notes
+    return sendResponse(req, res)
+  },
+  existingTags (req, res) {
+    req.status = 200
+    req.data = req.tags
+    return sendResponse(req, res)
   }
 }
 
@@ -19,8 +29,7 @@ function sendResponse (req, res) {
 function mapNote (note) {
   return {
     tags: note.tags,
-    header: note.header,
-    body: note.body,
-    created: note.created
+    title: note.title,
+    body: note.body
   }
 }
