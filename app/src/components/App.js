@@ -19,6 +19,7 @@ class App extends Component {
     this.getExistingTags = this.getExistingTags.bind(this)
     this.saveNewFavoriteTags = this.saveNewFavoriteTags.bind(this)
     this.homeTagTab = this.homeTagTab.bind(this)
+    this.getHashtagNotes = this.getHashtagNotes.bind(this)
     this.state = {
       notes: JSON.parse(localStorage.getItem('notes')) || {},
       favoriteTags: JSON.parse(localStorage.getItem('favoriteTags')) || [],
@@ -43,7 +44,7 @@ class App extends Component {
           </div>
           <div className='col-lg'>
             <Switch>
-              <Route exact path='/' component={(props) => <Home tab={this.homeTagTab(props)} notes={this.state.notes} favoriteTags={this.state.favoriteTags} existingTags={this.state.existingTags} saveNewFavoriteTags={this.saveNewFavoriteTags} />} />
+              <Route exact path='/' component={(props) => <Home tab={this.homeTagTab(props)} notes={this.state.notes} favoriteTags={this.state.favoriteTags} existingTags={this.state.existingTags} saveNewFavoriteTags={this.saveNewFavoriteTags} getHashtagNotes={this.getHashtagNotes} />} />
               <Route exact path='/create' component={() => <Create create={this.create} existingTags={this.state.existingTags} />} />
               <Route exact path='/search' component={() => <Search search={this.search} />} />
             </Switch>
@@ -64,6 +65,22 @@ class App extends Component {
     return this.api.get(params)
   }
 
+  async getHashtagNotes (tag) {
+    const res = await this.api.get({
+      tags: [tag]
+    })
+    const tagNotes = res.data.map(note => {
+      note.created = new Date(note.created.substr(0, note.created.length - 5))
+      note.updated = new Date(note.updated.substr(0, note.updated.length - 5))
+      return note
+    })
+    let notes = this.state.notes
+    notes[tag] = tagNotes
+    this.setState({
+      notes: notes
+    })
+  }
+
   async refreshNotes () {
     let notesPromise = this.state.favoriteTags.map(tag => this.api.get({ tags: [tag] }))
     let notesArr = await Promise.all(notesPromise)
@@ -71,6 +88,7 @@ class App extends Component {
     this.state.favoriteTags.forEach((tag, index) => {
       notes[tag] = notesArr[index].data.map(note => {
         note.created = new Date(note.created.substr(0, note.created.length - 5))
+        note.updated = new Date(note.updated.substr(0, note.updated.length - 5))
         return note
       })
     })
@@ -93,8 +111,8 @@ class App extends Component {
     let notes = {}
     favoriteTags.forEach((tag, index) => {
       notes[tag] = notesArr[index].data.map(note => {
-        console.log(note)
         note.created = new Date(note.created.substr(0, note.created.length - 5))
+        note.updated = new Date(note.updated.substr(0, note.updated.length - 5))
         return note
       })
     })

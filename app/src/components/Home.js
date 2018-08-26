@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import HomeTagsTypeAhead from './HomeTagsTypeahead'
+import { NavLink } from 'react-router-dom'
 import '../css/App.css'
 import settingsImg from '../images/settings.png'
 
 class Home extends Component {
+  constructor (props) {
+    super(props)
+    this.prepareTags = this.prepareTags.bind(this)
+  }
   render () {
     if (!this.props.notes) {
       return (
@@ -40,10 +45,11 @@ class Home extends Component {
                       return (
                         <div className='card' key={index}>
                           <div className='card-body'>
-                            <h5 className='card-title'>{note.title}</h5>
-                            <h6 className='card-subtitle mb-2 text-muted'>{prepareTags(note.tags)}</h6>
-                            <p className='card-text'>{note.body}</p>
-                            <p className='card-text'><small className='text-muted'>Created on: {note.created.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) }</small></p>
+                            <h5 className='card-title note-title'>{note.title}</h5>
+                            {this.prepareTags(note.tags)}
+                            <p className='card-text note-body'>{note.body}</p>
+                            <p className='card-text no-bot-margin'><small className='text-muted'>Created: {note.created.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) }</small></p>
+                            <p className='card-text no-bot-margin'><small className='text-muted'>Updated: {note.updated.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) }</small></p>
                           </div>
                         </div>
                       )
@@ -70,11 +76,16 @@ class Home extends Component {
       </div>
     )
   }
-}
-
-function prepareTags (tags) {
-  const hashtags = tags.map(tag => '#' + tag)
-  return hashtags.join(' ')
+  prepareTags (tags) {
+    const hashtags = tags.map((tag, index) => {
+      return <NavLink onClick={async () => this.props.getHashtagNotes(tag)} className='tag' to={'/#' + tag} key={index}>{'#' + tag }</NavLink>
+    })
+    return (
+      <div className='tags'>
+        {hashtags}
+      </div>
+    )
+  }
 }
 
 export default Home

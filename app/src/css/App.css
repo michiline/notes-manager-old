@@ -7,10 +7,24 @@ html, body{
 .headline  {
   margin: 2vh 0 2vh 0;
 }
-
 .row-form {
   margin: 2vh;
 }
 .round-edges {
   border-radius: 0.25rem;
+}
+.no-bot-margin {
+  margin-bottom: 0px;
+}
+.tag {
+  margin-right: 3px;
+}
+.tags {
+  margin-bottom: 0.5vh;
+}
+.note-title {
+  margin-bottom: 1vh !important;
+}
+.note-body {
+  margin-bottom: 0.5vh;
 }
