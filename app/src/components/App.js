@@ -18,6 +18,7 @@ class App extends Component {
     this.refreshNotes = this.refreshNotes.bind(this)
     this.getExistingTags = this.getExistingTags.bind(this)
     this.saveNewFavoriteTags = this.saveNewFavoriteTags.bind(this)
+    this.homeTagTab = this.homeTagTab.bind(this)
     this.state = {
       notes: JSON.parse(localStorage.getItem('notes')) || {},
       favoriteTags: JSON.parse(localStorage.getItem('favoriteTags')) || [],
@@ -33,7 +34,7 @@ class App extends Component {
     return (
       <div className='App container-fluid'>
         <div className='row'>
-          <div className='col-lg-2'>
+          <div className='col-lg-1'>
             <div className='nav flex-column'>
               <NavLink className='nav-link' to='/' activeClassName='active-navlink'> Home </NavLink>
               <NavLink className='nav-link' to='/create' activeClassName='active-navlink'> Create </NavLink>
@@ -42,7 +43,7 @@ class App extends Component {
           </div>
           <div className='col-lg'>
             <Switch>
-              <Route exact path='/' component={(props) => <Home tab={props.location.hash} notes={this.state.notes} favoriteTags={this.state.favoriteTags} existingTags={this.state.existingTags} saveNewFavoriteTags={this.saveNewFavoriteTags} />} />
+              <Route exact path='/' component={(props) => <Home tab={this.homeTagTab(props)} notes={this.state.notes} favoriteTags={this.state.favoriteTags} existingTags={this.state.existingTags} saveNewFavoriteTags={this.saveNewFavoriteTags} />} />
               <Route exact path='/create' component={() => <Create create={this.create} existingTags={this.state.existingTags} />} />
               <Route exact path='/search' component={() => <Search search={this.search} />} />
             </Switch>
@@ -55,6 +56,7 @@ class App extends Component {
   async create (data) {
     const res = await this.api.create(data)
     this.refreshNotes()
+    this.getExistingTags()
     return res
   }
 
@@ -68,7 +70,7 @@ class App extends Component {
     let notes = {}
     this.state.favoriteTags.forEach((tag, index) => {
       notes[tag] = notesArr[index].data.map(note => {
-        note._createdAt = new Date(note._createdAt.substr(0, note._createdAt.length - 5))
+        note.created = new Date(note.created.substr(0, note.created.length - 5))
         return note
       })
     })
@@ -91,17 +93,28 @@ class App extends Component {
     let notes = {}
     favoriteTags.forEach((tag, index) => {
       notes[tag] = notesArr[index].data.map(note => {
-        note._createdAt = new Date(note._createdAt.substr(0, note._createdAt.length - 5))
+        console.log(note)
+        note.created = new Date(note.created.substr(0, note.created.length - 5))
         return note
       })
     })
-    console.log(notes)
     localStorage.setItem('favoriteTags', JSON.stringify(favoriteTags))
     localStorage.setItem('notes', JSON.stringify(notes))
     this.setState({
       favoriteTags: favoriteTags,
       notes: notes
     })
+  }
+
+  homeTagTab (props) {
+    if (props.location.hash.length === 0) {
+      if (this.state.favoriteTags.length > 0) {
+        const url = `/#${this.state.favoriteTags[0]}`
+        props.history.push(url)
+        return '#' + this.state.favoriteTags[0]
+      }
+    }
+    return props.location.hash
   }
 }
 

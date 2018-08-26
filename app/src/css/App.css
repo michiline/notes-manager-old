@@ -3,3 +3,14 @@ html, body{
   font-family: 'Open Sans', 'Helvetica Neue', 'Tahoma', sans-serif, serif;
   height: 100%;
 }
+
+.headline  {
+  margin: 2vh 0 2vh 0;
+}
+
+.row-form {
+  margin: 2vh;
+}
+.round-edges {
+  border-radius: 0.25rem;
+}

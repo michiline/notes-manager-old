@@ -31,6 +31,8 @@ function mapNote (note) {
     tags: note.tags,
     title: note.title,
     body: note.body,
-    createdAt: note._createdAt
+    dueDate: note.dueDate,
+    created: note.created,
+    updated: note.updated
   }
 }

@@ -43,7 +43,7 @@ class Home extends Component {
                             <h5 className='card-title'>{note.title}</h5>
                             <h6 className='card-subtitle mb-2 text-muted'>{prepareTags(note.tags)}</h6>
                             <p className='card-text'>{note.body}</p>
-                            <p className='card-text'><small className='text-muted'>Created on: {note._createdAt.toLocaleString('hr-HR', { timeZone: 'CET' }) }</small></p>
+                            <p className='card-text'><small className='text-muted'>Created on: {note.created.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) }</small></p>
                           </div>
                         </div>
                       )
