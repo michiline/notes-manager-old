@@ -2,17 +2,14 @@ import Note from '../models/note-model'
 
 export default {
   async create (data) {
-    console.log(data)
     const note = new Note(data)
-    const date = Date.now()
-    console.log(date.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }))
-    data.dueTime = new Date(Number.parseInt(data.dueTime))
+    data.dueDate = new Date(Number.parseInt(data.dueTime))
     return note.save()
   },
   async get (query) {
     let queries = []
-    if (query.searchItems) {
-      queries.push({ $match: { $text: { $search: query.searchItems.join(' ') } } })
+    if (query.words) {
+      queries.push({ $match: { $text: { $search: query.words.join(' ') } } })
     }
     if (query.tags) {
       queries.push({ $match: { tags: { $all: query.tags } } })
@@ -29,5 +26,12 @@ export default {
   },
   async existingTags () {
     return Note.distinct('tags')
+  },
+  async update (id, data) {
+    if (data.dueDate) {
+      data.dueDate = new Date(Number.parseInt(data.dueDate))
+    }
+    data.updated = new Date(Date.now() + 7200000)
+    return Note.findByIdAndUpdate(id, data)
   }
 }

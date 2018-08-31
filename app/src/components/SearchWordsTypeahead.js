@@ -4,20 +4,17 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import 'react-bootstrap-typeahead/css/Typeahead-bs4.css'
 
-export default class CreateNewTagsTypeAhead extends Component {
+export default class SearchWordsTypeahead extends Component {
   render () {
     const multiple = true
     return (
       <Typeahead
         clearButton
-        allowNew
-        newSelectionPrefix='Add a new tag: '
-        labelKey='tag'
-        defaultSelected={this.props.selectedTags}
+        labelKey='word'
         multiple={multiple}
         options={[]}
-        placeholder='Create new tags'
-        onChange={e => this.props.saveSelectedTags(e)}
+        placeholder='Choose words'
+        onChange={e => this.props.saveWords(e)}
       />
     )
   }

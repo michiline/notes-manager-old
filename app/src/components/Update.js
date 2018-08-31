@@ -6,16 +6,16 @@ import 'react-day-picker/lib/style.css'
 
 import '../css/App.css'
 
-export default class Create extends Component {
+export default class Update extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      title: '',
-      tags: [],
+      title: this.props.data.title,
+      tags: this.props.data.tags,
       newTags: [],
-      body: '',
-      date: {},
-      time: ''
+      body: this.props.data.body,
+      date: this.props.data.dueDate && parseDate(this.props.data.dueDate),
+      time: this.props.data.dueDate && parseTime(this.props.data.dueDate)
     }
     this.inputTitle = this.inputTitle.bind(this)
     this.inputBody = this.inputBody.bind(this)
@@ -23,15 +23,26 @@ export default class Create extends Component {
     this.inputTime = this.inputTime.bind(this)
     this.saveExistingSelectedTags = this.saveExistingSelectedTags.bind(this)
     this.saveNewSelectedTags = this.saveNewSelectedTags.bind(this)
-    this.create = this.create.bind(this)
+    this.update = this.update.bind(this)
     this.cancel = this.cancel.bind(this)
   }
   render () {
+    if (!this.state.body) {
+      return (
+        <div className='container-fluid'>
+          <div className='row'>
+            <div className='col-lg'>
+              Loading...
+            </div>
+          </div>
+        </div>
+      )
+    }
     return (
-      <div>
+      <div className='container-fluid'>
         <div className='row headline text-center'>
           <div className='col-lg'>
-            <h1 className='display-4'>Create new note</h1>
+            <h1 className='display-4'>Update note</h1>
           </div>
         </div>
         <div className='row justify-content-md-center'>
@@ -64,7 +75,7 @@ export default class Create extends Component {
               <div className='form-group row'>
                 <label className='col-lg-2 col-form-label'>Due Date</label>
                 <div className='col-lg-10'>
-                  <DayPickerInput onDayChange={date => this.inputDate(date)} />
+                  <DayPickerInput value={this.state.date} onDayChange={date => this.inputDate(date)} />
                 </div>
               </div>
               <div className='form-group row'>
@@ -75,7 +86,7 @@ export default class Create extends Component {
               </div>
               <div className='form-group row'>
                 <div className='col-lg d-flex justify-content-end'>
-                  <button onClick={this.create} type='submit' className='btn btn-primary button'>Create</button>
+                  <button onClick={this.update} type='submit' className='btn btn-primary button'>Save</button>
                   <button onClick={this.cancel} type='submit' className='btn btn-secondary'>Cancel</button>
                 </div>
               </div>
@@ -121,16 +132,25 @@ export default class Create extends Component {
       newTags: newTags
     })
   }
-  async create (e) {
+  async update (e) {
     e.preventDefault()
     try {
-      await this.props.create({
+      await this.props.update(this.props.data.id, {
         title: this.state.title,
         tags: this.state.tags.concat(this.state.newTags),
         body: this.state.body,
         dueDate: getMilliseconds(this.state.date, this.state.time)
       })
+      this.props.history.push('/')
     } catch (err) {
+      this.setState({
+        title: '',
+        tags: [],
+        newTags: [],
+        body: '',
+        date: {},
+        time: ''
+      })
       console.log(err)
     }
   }
@@ -142,6 +162,17 @@ export default class Create extends Component {
 
 function getMilliseconds (date, time) {
   const split = date.toJSON().split('T')
-  const newDate = new Date(`${split[0]}T${time}:00`)
-  return newDate.getTime() + 7200000
+  return new Date(`${split[0]}T${time}:00`).getTime() + 7200000
+}
+
+function parseDate (date) {
+  const hours = date.getHours() - 2
+  const minutes = date.getMinutes()
+  return new Date(date.getTime() - hours * 3600000 - minutes * 60000)
+}
+
+function parseTime (date) {
+  const newDate = date.getTime() + 4 * 3600000
+  const split = new Date(newDate).toJSON().split('T')
+  return split[1].substr(0, 5)
 }

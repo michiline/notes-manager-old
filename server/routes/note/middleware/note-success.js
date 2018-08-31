@@ -12,6 +12,12 @@ export default {
     req.data = req.notes
     return sendResponse(req, res)
   },
+  update (req, res) {
+    req.status = 200
+    req.message = message.success.noteUpdate
+    req.data = req.notes
+    return sendResponse(req, res)
+  },
   existingTags (req, res) {
     req.status = 200
     req.data = req.tags

@@ -4,7 +4,7 @@ import { Typeahead } from 'react-bootstrap-typeahead'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 import 'react-bootstrap-typeahead/css/Typeahead-bs4.css'
 
-class CreateExistingTagsTypeahead extends Component {
+export default class CreateExistingTagsTypeahead extends Component {
   render () {
     const multiple = true
     return (
@@ -20,5 +20,3 @@ class CreateExistingTagsTypeahead extends Component {
     )
   }
 }
-
-export default CreateExistingTagsTypeahead

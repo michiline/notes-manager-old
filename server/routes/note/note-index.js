@@ -24,6 +24,14 @@ router.get('/',
   success.get,
   error.get
 )
+router.post('/update/:id',
+  noteValidate.update,
+  noteController.update,
+  log.success,
+  log.error,
+  success.update,
+  error.update
+)
 router.get('/tags',
   noteValidate.existingTags,
   noteController.existingTags,

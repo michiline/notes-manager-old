@@ -19,6 +19,15 @@ export default {
       return next(err)
     }
   },
+  async update (req, res, next) {
+    try {
+      req.notes = await noteRepo.update(req.params.id, req.body)
+      return next()
+    } catch (err) {
+      console.log(err)
+      return next(err)
+    }
+  },
   async existingTags (req, res, next) {
     try {
       req.tags = await noteRepo.existingTags()

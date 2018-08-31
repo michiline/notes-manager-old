@@ -10,6 +10,7 @@ export default {
     userCreated: 'USER_CREATED',
     userLoggedIn: 'LOGGED_IN',
     userLoggedOut: 'LOGGED_OUT',
-    noteCreated: 'NOTE_CREATED'
+    noteCreated: 'NOTE_CREATED',
+    noteUpdated: 'NOTE_UPDATED'
   }
 }

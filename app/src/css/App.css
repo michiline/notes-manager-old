@@ -3,9 +3,11 @@ html, body{
   font-family: 'Open Sans', 'Helvetica Neue', 'Tahoma', sans-serif, serif;
   height: 100%;
 }
-
 .headline  {
   margin: 2vh 0 2vh 0;
+}
+.App {
+  padding: 0 !important;
 }
 .row-form {
   margin: 2vh;
@@ -27,4 +29,14 @@ html, body{
 }
 .note-body {
   margin-bottom: 0.5vh;
+}
+.updateImg {
+  margin-left: 3px;
+  padding-bottom: 3px;
+}
+.button {
+  margin-right: 0.5vw;
+}
+.cancel {
+  color: white;
 }

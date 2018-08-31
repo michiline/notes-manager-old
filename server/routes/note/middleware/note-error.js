@@ -19,6 +19,15 @@ export default {
     }
     return sendResponse(req, res)
   },
+  update (err, req, res, next) {
+    if (err.message === message.error.invalidData) {
+      req.message = message.error.invalidData
+      req.status = 400
+    } else {
+      generalError(req)
+    }
+    return sendResponse(req, res)
+  },
   existingTags (err, req, res, next) {
     if (err) {
       generalError(req)
