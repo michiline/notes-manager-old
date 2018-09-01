@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, NavLink } from 'react-router-dom'
 import axios from 'axios'
 
 import Api from '../api/Api'
+import Toolbar from './Toolbar'
 import Home from './Home'
+import Create from './Create'
 import Update from './Update'
+import Search from './Search'
 
 import '../css/App.css'
 
@@ -20,12 +23,12 @@ export default class App extends Component {
     this.getExistingTags = this.getExistingTags.bind(this)
     this.saveNewFavoriteTags = this.saveNewFavoriteTags.bind(this)
     this.homeTagTab = this.homeTagTab.bind(this)
-    this.getHashtagNotes = this.getHashtagNotes.bind(this)
+    this.getHashtagLinkNotes = this.getHashtagLinkNotes.bind(this)
     this.prepareUpdateNote = this.prepareUpdateNote.bind(this)
+    this.prepareTags = this.prepareTags.bind(this)
     this.state = {
       notes: parseNotes(JSON.parse(localStorage.getItem('notes'))) || {},
       favoriteTags: JSON.parse(localStorage.getItem('favoriteTags')) || [],
-      copyFavoriteTags: [],
       existingTags: [],
       updateNote: {},
       searchNotes: []
@@ -38,17 +41,16 @@ export default class App extends Component {
   render () {
     return (
       <div className='App'>
-        <div className='row'>
-          <div className='col-lg'>
-            <Switch>
-              <Route exact path='/' component={(props) => <Home tab={this.homeTagTab(props)} notes={this.state.notes} favoriteTags={this.state.favoriteTags} existingTags={this.state.existingTags} saveNewFavoriteTags={this.saveNewFavoriteTags} getHashtagNotes={this.getHashtagNotes} create={this.create} history={props.history} search={this.search} searchNotes={this.state.searchNotes} />} />
-              <Route exact path='/update/:id' component={(props) => {
-                this.prepareUpdateNote(props.match.params.id)
-                return <Update data={this.state.updateNote} existingTags={this.state.existingTags} history={props.history} update={this.update} />
-              }} />
-            </Switch>
-          </div>
-        </div>
+        <Toolbar favoriteTags={this.state.favoriteTags} existingTags={this.state.existingTags} saveNewFavoriteTags={this.saveNewFavoriteTags} />
+        <Home notes={this.state.notes} getHashtagLinkNotes={this.getHashtagLinkNotes} />
+        <Switch>
+          <Route exact path='/update/:id' component={(props) => {
+            this.prepareUpdateNote(props.match.params.id)
+            return <Update data={this.state.updateNote} existingTags={this.state.existingTags} history={props.history} update={this.update} />
+          }} />
+          <Route exact path='/create' component={(props) => <Create create={this.create} existingTags={this.state.existingTags} history={props.history} />} />
+          <Route exact path='/search' component={(props) => <Search search={this.search} existingTags={this.state.existingTags} searchNotes={this.state.searchNotes} prepareTags={this.prepareTags} history={props.history} />} />
+        </Switch>
       </div>
     )
   }
@@ -73,7 +75,7 @@ export default class App extends Component {
     return res
   }
 
-  async getHashtagNotes (tag) {
+  async getHashtagLinkNotes (tag) {
     console.log('get')
     const res = await this.api.get({
       tags: [tag]
@@ -146,6 +148,17 @@ export default class App extends Component {
     this.setState({
       updateNote: updateNote
     })
+  }
+
+  prepareTags (tags) {
+    const hashtags = tags.map((tag, index) => {
+      return <NavLink onClick={async () => this.getHashtagLinkNotes(tag)} className='tag' to={'/#' + tag} key={index}>{'#' + tag }</NavLink>
+    })
+    return (
+      <div className='tags'>
+        {hashtags}
+      </div>
+    )
   }
 }
 

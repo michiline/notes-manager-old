@@ -26,7 +26,7 @@ export default class Search extends Component {
             <h1 className='display-4'>Search notes</h1>
           </div>
         </div>
-        <div className='row justify-content-md-center'>
+        <div className='row justify-content-lg-center'>
           <div className='col-lg-8'>
             <form>
               <div className='form-group row'>
