@@ -32,6 +32,14 @@ router.post('/update/:id',
   success.update,
   error.update
 )
+router.delete('/:id',
+  noteValidate.delete,
+  noteController.delete,
+  log.success,
+  log.error,
+  success.delete,
+  error.delete
+)
 router.get('/tags',
   noteValidate.existingTags,
   noteController.existingTags,

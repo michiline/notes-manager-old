@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
+import DeleteModal from './DeleteModal'
 
 import '../css/App.css'
 
 import updateImg from '../images/update.png'
+import deleteImg from '../images/delete.png'
+import doneImg from '../images/done.png'
 
 class Home extends Component {
   constructor (props) {
@@ -29,6 +32,10 @@ class Home extends Component {
     return (
       <div>
         {Object.entries(this.props.notes).map((entry, index) => this.prepareNotes(entry, index))}
+        <DeleteModal
+          deleteNoteId={this.props.deleteNoteId}
+          setDeleteNoteId={this.props.setDeleteNoteId}
+          deleteNote={this.props.deleteNote} />
       </div>
     )
   }
@@ -63,7 +70,10 @@ class Home extends Component {
     return (
       <div className='card' key={index}>
         <div className='card-body'>
-          <h5 className='card-title note-title'>{note.title} <a data-toggle='tab' href={'/update/' + note.id}><img className='updateImg' src={updateImg} alt='edit' /></a></h5>
+          <h5 className='card-title note-title'>{note.title}
+            <a data-toggle='tab' href={'/update/' + note.id}><img className='noteImg' src={updateImg} alt='edit' /></a>
+            <img className='noteImg' src={deleteImg} alt='delete' onClick={e => this.props.setDeleteNoteId(note.id)} />
+          </h5>
           {this.prepareTags(note.tags)}
           <p className='card-text note-body'>{note.body}</p>
           <p className='card-text no-bot-margin'><small className='text-muted'><strong>Created:</strong> {note.created.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) } | <strong>Updated:</strong> {note.updated.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) } | <strong>Due:</strong> {note.dueDate.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' })} - <strong>{Math.floor((note.dueDate.getTime() - Date.now()) / 86400000)} days left</strong> </small></p>

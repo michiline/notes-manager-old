@@ -14,8 +14,13 @@ export default {
   },
   update (req, res) {
     req.status = 200
-    req.message = message.success.noteUpdate
+    req.message = message.success.noteUpdated
     req.data = req.notes
+    return sendResponse(req, res)
+  },
+  delete (req, res) {
+    req.status = 200
+    req.message = message.success.noteDeleted
     return sendResponse(req, res)
   },
   existingTags (req, res) {

@@ -28,6 +28,15 @@ export default {
       return next(err)
     }
   },
+  async delete (req, res, next) {
+    try {
+      await noteRepo.delete(req.params.id)
+      return next()
+    } catch (err) {
+      console.log(err)
+      return next(err)
+    }
+  },
   async existingTags (req, res, next) {
     try {
       req.tags = await noteRepo.existingTags()

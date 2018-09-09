@@ -26,12 +26,15 @@ export default class App extends Component {
     this.getHashtagLinkNotes = this.getHashtagLinkNotes.bind(this)
     this.prepareUpdateNote = this.prepareUpdateNote.bind(this)
     this.prepareTags = this.prepareTags.bind(this)
+    this.setDeleteNoteId = this.setDeleteNoteId.bind(this)
+    this.deleteNote = this.deleteNote.bind(this)
     this.state = {
       notes: parseNotes(JSON.parse(localStorage.getItem('notes'))) || {},
       favoriteTags: JSON.parse(localStorage.getItem('favoriteTags')) || [],
       existingTags: [],
       updateNote: {},
-      searchNotes: []
+      searchNotes: [],
+      deleteNoteId: ''
     }
   }
   async componentDidMount () {
@@ -41,15 +44,40 @@ export default class App extends Component {
   render () {
     return (
       <div className='App'>
-        <Toolbar favoriteTags={this.state.favoriteTags} existingTags={this.state.existingTags} saveNewFavoriteTags={this.saveNewFavoriteTags} />
-        <Home notes={this.state.notes} getHashtagLinkNotes={this.getHashtagLinkNotes} />
+        <Toolbar
+          favoriteTags={this.state.favoriteTags}
+          existingTags={this.state.existingTags}
+          saveNewFavoriteTags={this.saveNewFavoriteTags} />
+        <Home
+          notes={this.state.notes}
+          getHashtagLinkNotes={this.getHashtagLinkNotes}
+          deleteNoteId={this.state.deleteNoteId}
+          setDeleteNoteId={this.setDeleteNoteId}
+          deleteNote={this.deleteNote} />
         <Switch>
           <Route exact path='/update/:id' component={(props) => {
             this.prepareUpdateNote(props.match.params.id)
-            return <Update data={this.state.updateNote} existingTags={this.state.existingTags} history={props.history} update={this.update} />
+            return (
+              <Update
+                updateNote={this.state.updateNote}
+                existingTags={this.state.existingTags}
+                history={props.history}
+                update={this.update} />)
           }} />
-          <Route exact path='/create' component={(props) => <Create create={this.create} existingTags={this.state.existingTags} history={props.history} />} />
-          <Route exact path='/search' component={(props) => <Search search={this.search} existingTags={this.state.existingTags} searchNotes={this.state.searchNotes} prepareTags={this.prepareTags} history={props.history} />} />
+          <Route exact path='/create' component={(props) =>
+            <Create
+              create={this.create}
+              existingTags={this.state.existingTags}
+              history={props.history}
+            />}
+          />
+          <Route exact path='/search' component={(props) =>
+            <Search
+              search={this.search}
+              existingTags={this.state.existingTags}
+              searchNotes={this.state.searchNotes}
+              prepareTags={this.prepareTags}
+              history={props.history} />} />
         </Switch>
       </div>
     )
@@ -68,11 +96,27 @@ export default class App extends Component {
       searchNotes: res.data
     })
   }
+
   async update (id, data) {
     const res = await this.api.update(id, data)
     this.refreshNotes()
     this.getExistingTags()
     return res
+  }
+
+  setDeleteNoteId (id) {
+    this.setState({
+      deleteNoteId: id
+    })
+  }
+
+  async deleteNote () {
+    await this.api.delete(this.state.deleteNoteId)
+    this.setState({
+      deleteNoteId: ''
+    })
+    this.refreshNotes()
+    this.getExistingTags()
   }
 
   async getHashtagLinkNotes (tag) {
@@ -135,7 +179,7 @@ export default class App extends Component {
   }
 
   prepareUpdateNote (id) {
-    if (Object.entries(this.state.updateNote).length > 0) {
+    if (this.state.updateNote && Object.entries(this.state.updateNote).length > 0) {
       return
     }
     let updateNote
@@ -145,6 +189,7 @@ export default class App extends Component {
         updateNote = foundNote
       }
     })
+    // ako note nije u favoriteTagsima onda ga nema, pa ga treba dohvatit
     this.setState({
       updateNote: updateNote
     })

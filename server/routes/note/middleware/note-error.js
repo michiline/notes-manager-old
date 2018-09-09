@@ -28,6 +28,12 @@ export default {
     }
     return sendResponse(req, res)
   },
+  delete (err, req, res, next) {
+    if (err) {
+      generalError(req)
+    }
+    return sendResponse(req, res)
+  },
   existingTags (err, req, res, next) {
     if (err) {
       generalError(req)

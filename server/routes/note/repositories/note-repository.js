@@ -33,5 +33,8 @@ export default {
     }
     data.updated = new Date(Date.now() + 7200000)
     return Note.findByIdAndUpdate(id, data)
+  },
+  async delete (id) {
+    return Note.findById(id).remove()
   }
 }

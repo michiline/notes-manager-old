@@ -10,12 +10,12 @@ export default class Update extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      title: this.props.data.title,
-      tags: this.props.data.tags,
+      title: this.props.updateNote.title,
+      tags: this.props.updateNote.tags,
       newTags: [],
-      body: this.props.data.body,
-      date: this.props.data.dueDate && parseDate(this.props.data.dueDate),
-      time: this.props.data.dueDate && parseTime(this.props.data.dueDate)
+      body: this.props.updateNote.body,
+      date: this.props.updateNote.dueDate && parseDate(this.props.updateNote.dueDate),
+      time: this.props.updateNote.dueDate && parseTime(this.props.updateNote.dueDate)
     }
     this.inputTitle = this.inputTitle.bind(this)
     this.inputBody = this.inputBody.bind(this)
@@ -135,7 +135,7 @@ export default class Update extends Component {
   async update (e) {
     e.preventDefault()
     try {
-      await this.props.update(this.props.data.id, {
+      await this.props.update(this.props.updateNote.id, {
         title: this.state.title,
         tags: this.state.tags.concat(this.state.newTags),
         body: this.state.body,

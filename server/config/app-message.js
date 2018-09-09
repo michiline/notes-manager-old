@@ -11,6 +11,7 @@ export default {
     userLoggedIn: 'LOGGED_IN',
     userLoggedOut: 'LOGGED_OUT',
     noteCreated: 'NOTE_CREATED',
-    noteUpdated: 'NOTE_UPDATED'
+    noteUpdated: 'NOTE_UPDATED',
+    noteDeleted: 'NOTE_DELETED'
   }
 }

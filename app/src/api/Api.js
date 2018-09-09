@@ -4,6 +4,7 @@ export default class Api {
     this.create = this.create.bind(this)
     this.get = this.get.bind(this)
     this.update = this.update.bind(this)
+    this.delete = this.delete.bind(this)
     this.getExistingTags = this.getExistingTags.bind(this)
   }
 
@@ -30,6 +31,14 @@ export default class Api {
       method: 'post',
       url: `/api/note/update/${id}`,
       data: data
+    })
+    return res.data
+  }
+
+  async delete (id) {
+    const res = await this.axios({
+      method: 'delete',
+      url: `/api/note/${id}`
     })
     return res.data
   }

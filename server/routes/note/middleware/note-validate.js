@@ -18,6 +18,13 @@ export default {
       return next(err)
     }
   },
+  delete (req, res, next) {
+    try {
+      return next()
+    } catch (err) {
+      return next(err)
+    }
+  },
   update (req, res, next) {
     try {
       return next()
