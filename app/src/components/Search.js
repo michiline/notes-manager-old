@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import SearchTagsTypeahead from './SearchTagsTypeahead'
+import DeleteModal from './DeleteModal'
 
 import updateImg from '../images/update.png'
+import deleteImg from '../images/delete.png'
+import doneImg from '../images/done.png'
 
 import '../css/App.css'
 
@@ -51,7 +54,10 @@ export default class Search extends Component {
                 return (
                   <div className='card' key={index}>
                     <div className='card-body'>
-                      <h5 className='card-title note-title'>{note.title} <a data-toggle='tab' href={'/update/' + note.id}><img className='updateImg' src={updateImg} alt='edit' /></a></h5>
+                      <h5 className='card-title note-title'>{note.title}
+                        <a data-toggle='tab' href={'/update/' + note.id}><img className='updateImg' src={updateImg} alt='edit' /></a>
+                        <img className='noteImg' src={deleteImg} alt='delete' onClick={e => this.props.setDeleteNoteId(note.id)} />
+                      </h5>
                       {this.props.prepareTags(note.tags)}
                       <p className='card-text note-body'>{note.body}</p>
                       <p className='card-text no-bot-margin'><small className='text-muted'><strong>Created:</strong> {note.created.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) } | <strong>Updated:</strong> {note.updated.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) } | <strong>Due:</strong> {note.dueDate.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' })} - <strong>{Math.floor((note.dueDate.getTime() - Date.now()) / 86400000)} days left</strong> </small></p>
@@ -62,6 +68,10 @@ export default class Search extends Component {
             </form>
           </div>
         </div>
+        <DeleteModal
+          deleteNoteId={this.props.deleteNoteId}
+          setDeleteNoteId={this.props.setDeleteNoteId}
+          deleteNote={this.props.deleteNote} />
       </div>
     )
   }
@@ -85,7 +95,7 @@ export default class Search extends Component {
   }
   async cancel (e) {
     e.preventDefault()
-    this.props.history.push('/')
+    this.props.history.goBack()
   }
   async saveSelectedTags (tags) {
     this.setState({

@@ -141,7 +141,9 @@ export default class Update extends Component {
         body: this.state.body,
         dueDate: getMilliseconds(this.state.date, this.state.time)
       })
-      this.props.history.push('/')
+      if (this.props.favoriteTags.length > 0) {
+        this.props.history.push(`/#${this.props.favoriteTags[0]}`)
+      }
     } catch (err) {
       this.setState({
         title: '',
@@ -156,7 +158,7 @@ export default class Update extends Component {
   }
   async cancel (e) {
     e.preventDefault()
-    this.props.history.push('/')
+    this.props.history.goBack()
   }
 }
 

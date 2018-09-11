@@ -24,7 +24,7 @@ router.get('/',
   success.get,
   error.get
 )
-router.post('/update/:id',
+router.patch('/:id',
   noteValidate.update,
   noteController.update,
   log.success,

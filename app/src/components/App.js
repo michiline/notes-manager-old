@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import Api from '../api/Api'
 import Toolbar from './Toolbar'
-import Home from './Home'
+import NoteList from './NoteList'
 import Create from './Create'
 import Update from './Update'
 import Search from './Search'
@@ -48,7 +48,7 @@ export default class App extends Component {
           favoriteTags={this.state.favoriteTags}
           existingTags={this.state.existingTags}
           saveNewFavoriteTags={this.saveNewFavoriteTags} />
-        <Home
+        <NoteList
           notes={this.state.notes}
           getHashtagLinkNotes={this.getHashtagLinkNotes}
           deleteNoteId={this.state.deleteNoteId}
@@ -60,6 +60,7 @@ export default class App extends Component {
             return (
               <Update
                 updateNote={this.state.updateNote}
+                favoriteTags={this.state.favoriteTags}
                 existingTags={this.state.existingTags}
                 history={props.history}
                 update={this.update} />)
@@ -68,6 +69,7 @@ export default class App extends Component {
             <Create
               create={this.create}
               existingTags={this.state.existingTags}
+              favoriteTags={this.state.favoriteTags}
               history={props.history}
             />}
           />
@@ -77,7 +79,10 @@ export default class App extends Component {
               existingTags={this.state.existingTags}
               searchNotes={this.state.searchNotes}
               prepareTags={this.prepareTags}
-              history={props.history} />} />
+              history={props.history}
+              deleteNoteId={this.state.deleteNoteId}
+              setDeleteNoteId={this.setDeleteNoteId}
+              deleteNote={this.deleteNote} />} />
         </Switch>
       </div>
     )

@@ -20,8 +20,8 @@ export default class DeleteModal extends Component {
               <p>Are you sure you want to delete this note?</p>
             </div>
             <div className='modal-footer'>
-              <button type='button' className='btn btn-secondary' onClick={e => this.props.setDeleteNoteId('')}>Close</button>
               <button type='button' className='btn btn-primary' onClick={this.props.deleteNote}>Delete</button>
+              <button type='button' className='btn btn-secondary' onClick={e => this.props.setDeleteNoteId('')}>Cancel</button>
             </div>
           </div>
         </div>

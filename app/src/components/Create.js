@@ -130,13 +130,16 @@ export default class Create extends Component {
         body: this.state.body,
         dueDate: getMilliseconds(this.state.date, this.state.time)
       })
+      if (this.props.favoriteTags.length > 0) {
+        this.props.history.push(`/#${this.props.favoriteTags[0]}`)
+      }
     } catch (err) {
       console.log(err)
     }
   }
   async cancel (e) {
     e.preventDefault()
-    this.props.history.push('/')
+    this.props.history.goBack()
   }
 }
 

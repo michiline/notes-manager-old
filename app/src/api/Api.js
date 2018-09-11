@@ -28,8 +28,8 @@ export default class Api {
 
   async update (id, data) {
     const res = await this.axios({
-      method: 'post',
-      url: `/api/note/update/${id}`,
+      method: 'patch',
+      url: `/api/note/${id}`,
       data: data
     })
     return res.data
