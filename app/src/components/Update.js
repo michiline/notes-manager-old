@@ -9,18 +9,33 @@ import '../css/App.css'
 export default class Update extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      title: this.props.updateNote.title,
-      tags: this.props.updateNote.tags,
-      newTags: [],
-      body: this.props.updateNote.body,
-      date: this.props.updateNote.dueDate && parseDate(this.props.updateNote.dueDate),
-      time: this.props.updateNote.dueDate && parseTime(this.props.updateNote.dueDate)
+    if (this.props.updateNote.dueDate !== 0) {
+      this.state = {
+        title: this.props.updateNote.title,
+        tags: this.props.updateNote.tags,
+        newTags: [],
+        body: this.props.updateNote.body,
+        dueDate: true,
+        date: parseDate(this.props.updateNote.dueDate),
+        time: parseTime(this.props.updateNote.dueDate)
+      }
+    } else {
+      console.log('was here')
+      this.state = {
+        title: this.props.updateNote.title,
+        tags: this.props.updateNote.tags,
+        newTags: [],
+        body: this.props.updateNote.body,
+        dueDate: false,
+        date: new Date(Date.now()),
+        time: '00:00'
+      }
     }
     this.inputTitle = this.inputTitle.bind(this)
     this.inputBody = this.inputBody.bind(this)
     this.inputDate = this.inputDate.bind(this)
     this.inputTime = this.inputTime.bind(this)
+    this.checkDueDate = this.checkDueDate.bind(this)
     this.saveExistingSelectedTags = this.saveExistingSelectedTags.bind(this)
     this.saveNewSelectedTags = this.saveNewSelectedTags.bind(this)
     this.update = this.update.bind(this)
@@ -69,16 +84,24 @@ export default class Update extends Component {
               <div className='form-group row'>
                 <label className='col-lg-2 col-form-label'>Body</label>
                 <div className='col-lg-10'>
-                  <textarea value={this.state.body} onChange={e => this.inputBody(e)} className='form-control' id='exampleFormControlTextarea1' rows='5' placeholder='Enter text' />
+                  <textarea value={this.state.body} onChange={e => this.inputBody(e)} className='form-control' rows='5' placeholder='Enter text' />
                 </div>
               </div>
               <div className='form-group row'>
+                <div className='col-lg-2'>
+                  <div className='custom-control custom-checkbox'>
+                    <input value={this.state.dueDate} onChange={e => this.checkDueDate(e)} type='checkbox' className='custom-control-input' id='customCheck1' />
+                    <label className='custom-control-label' htmlFor='customCheck1'>Due Date</label>
+                  </div>
+                </div>
+              </div>
+              <div className={this.state.dueDate ? 'form-group row' : 'hide'}>
                 <label className='col-lg-2 col-form-label'>Due Date</label>
                 <div className='col-lg-10'>
                   <DayPickerInput value={this.state.date} onDayChange={date => this.inputDate(date)} />
                 </div>
               </div>
-              <div className='form-group row'>
+              <div className={this.state.dueDate ? 'form-group row' : 'hide'}>
                 <label className='col-lg-2 col-form-label'>Due Time</label>
                 <div className='col-lg-3'>
                   <input value={this.state.time} onChange={e => this.inputTime(e)} type='text' className='form-control' placeholder='e.g. 16:30' />
@@ -114,6 +137,11 @@ export default class Update extends Component {
   inputTime (e) {
     this.setState({
       time: e.target.value
+    })
+  }
+  checkDueDate (e) {
+    this.setState({
+      dueDate: !this.state.dueDate
     })
   }
   async saveExistingSelectedTags (tags) {
@@ -168,6 +196,10 @@ function getMilliseconds (date, time) {
 }
 
 function parseDate (date) {
+  if (!date) {
+    console.log('was here')
+    return new Date(Date.now())
+  }
   return new Date(date)
 }
 

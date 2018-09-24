@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import DeleteModal from './DeleteModal'
-
+import { prepareDates, cardClass } from '../utils/utils'
 import '../css/App.css'
 
 import updateImg from '../images/update.png'
@@ -14,7 +14,6 @@ class Home extends Component {
     super(props)
     this.prepareNotes = this.prepareNotes.bind(this)
     this.prepareTags = this.prepareTags.bind(this)
-    this.prepareDates = this.prepareDates.bind(this)
     this.noteCard = this.noteCard.bind(this)
     this.tagLink = this.tagLink.bind(this)
   }
@@ -57,21 +56,7 @@ class Home extends Component {
       </div>
     )
   }
-  prepareDates (created, updated, dueDate) {
-    const createdString = new Date(created).toLocaleString('hr-HR', { timeZone: 'Europe/Zagreb' })
-    const updatedString = new Date(updated).toLocaleString('hr-HR', { timeZone: 'Europe/Zagreb' })
-    const dueDateString = new Date(dueDate).toLocaleString('hr-HR', { timeZone: 'Europe/Zagreb' })
-    const daysLeft = Math.floor((dueDate - Date.now()) / 86400000)
-    const hoursLeft = Math.floor((dueDate - Date.now()) / 3600000)
-    return (
-      <small className='text-muted'>
-        <strong>Created:</strong> {`${createdString} | `}
-        <strong>Updated:</strong> {`${updatedString} | `}
-        <strong>Due:</strong> {`${dueDateString} - `}
-        {daysLeft > 0 ? <strong>{`${daysLeft} days left `}</strong> : <strong>{`${hoursLeft} hours left `}</strong>}
-      </small>
-    )
-  }
+
   tagLink (tag, index) {
     return (
       <NavLink
@@ -84,7 +69,7 @@ class Home extends Component {
   }
   noteCard (note, index) {
     return (
-      <div className='card' key={index}>
+      <div className={cardClass(note)} key={index}>
         <div className='card-body'>
           <h5 className='card-title note-title'>{note.title}
             <a data-toggle='tab' href={'/update/' + note.id}><img className='noteImg' src={updateImg} alt='edit' /></a>
@@ -92,7 +77,7 @@ class Home extends Component {
           </h5>
           {this.prepareTags(note.tags)}
           <p className='card-text note-body'>{note.body}</p>
-          <p className='card-text no-bot-margin'>{this.prepareDates(note.created, note.updated, note.dueDate)}</p>
+          <p className='card-text no-bot-margin'>{prepareDates(note)}</p>
         </div>
       </div>
     )

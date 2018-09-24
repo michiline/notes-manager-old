@@ -10,6 +10,7 @@ export default class Create extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      dueDate: false,
       title: '',
       tags: [],
       newTags: [],
@@ -21,6 +22,7 @@ export default class Create extends Component {
     this.inputBody = this.inputBody.bind(this)
     this.inputDate = this.inputDate.bind(this)
     this.inputTime = this.inputTime.bind(this)
+    this.checkDueDate = this.checkDueDate.bind(this)
     this.saveExistingSelectedTags = this.saveExistingSelectedTags.bind(this)
     this.saveNewSelectedTags = this.saveNewSelectedTags.bind(this)
     this.create = this.create.bind(this)
@@ -62,13 +64,21 @@ export default class Create extends Component {
                 </div>
               </div>
               <div className='form-group row'>
-                <label className='col-lg-2 col-form-label'>Due Date</label>
+                <div className='col-lg-2'>
+                  <div className='custom-control custom-checkbox'>
+                    <input onChange={e => this.checkDueDate(e)} type='checkbox' className='custom-control-input' id='customCheck1' />
+                    <label className='custom-control-label' htmlFor='customCheck1'>Due Date</label>
+                  </div>
+                </div>
+              </div>
+              <div className={this.state.dueDate ? 'form-group row' : 'hide'}>
+                <label className='col-lg-2 col-form-label'>Date</label>
                 <div className='col-lg-10'>
                   <DayPickerInput onDayChange={date => this.inputDate(date)} />
                 </div>
               </div>
-              <div className='form-group row'>
-                <label className='col-lg-2 col-form-label'>Due Time</label>
+              <div className={this.state.dueDate ? 'form-group row' : 'hide'}>
+                <label className='col-lg-2 col-form-label'>Time</label>
                 <div className='col-lg-3'>
                   <input value={this.state.time} onChange={e => this.inputTime(e)} type='text' className='form-control' placeholder='e.g. 16:30' />
                 </div>
@@ -105,6 +115,11 @@ export default class Create extends Component {
       time: e.target.value
     })
   }
+  checkDueDate (e) {
+    this.setState({
+      dueDate: !this.state.dueDate
+    })
+  }
   async saveExistingSelectedTags (tags) {
     this.setState({
       tags: tags
@@ -124,12 +139,17 @@ export default class Create extends Component {
   async create (e) {
     e.preventDefault()
     try {
-      await this.props.create({
+      let data = {
         title: this.state.title,
         tags: this.state.tags.concat(this.state.newTags),
-        body: this.state.body,
-        dueDate: getMilliseconds(this.state.date, this.state.time)
-      })
+        body: this.state.body
+      }
+      if (!this.state.dueDate) {
+        data.dueDate = 0
+      } else {
+        data.dueDate = getMilliseconds(this.state.date, this.state.time)
+      }
+      await this.props.create(data)
       if (this.props.favoriteTags.length > 0) {
         this.props.history.push(`/#${this.props.favoriteTags[0]}`)
       }
