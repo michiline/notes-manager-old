@@ -164,17 +164,24 @@ export default class Update extends Component {
 
 function getMilliseconds (date, time) {
   const split = date.toJSON().split('T')
-  return new Date(`${split[0]}T${time}:00`).getTime() + 7200000
+  return new Date(`${split[0]}T${time}:00`).getTime()
 }
 
 function parseDate (date) {
-  const hours = date.getHours() - 2
-  const minutes = date.getMinutes()
-  return new Date(date.getTime() - hours * 3600000 - minutes * 60000)
+  return new Date(date)
 }
 
 function parseTime (date) {
-  const newDate = date.getTime() + 4 * 3600000
-  const split = new Date(newDate).toJSON().split('T')
-  return split[1].substr(0, 5)
+  const newDate = new Date(date)
+  const hours = newDate.getHours()
+  const minutes = newDate.getMinutes()
+  let hoursString = hours
+  if (hours < 10) {
+    hoursString = `0${hours}`
+  }
+  let minutesString = minutes
+  if (minutes < 10) {
+    minutesString = `0${minutes}`
+  }
+  return `${hoursString}:${minutesString}`
 }

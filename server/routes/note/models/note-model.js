@@ -5,17 +5,21 @@ const noteSchema = new Schema({
   title: String,
   tags: [String],
   body: String,
-  dueDate: Date,
+  timeConstraint: Boolean,
+  dueDate: {
+    type: Number,
+    default: 0
+  },
   created: {
-    type: Date,
+    type: Number,
     default: () => {
-      return new Date(Date.now() + 7200000)
+      return Date.now()
     }
   },
   updated: {
-    type: Date,
+    type: Number,
     default: () => {
-      return new Date(Date.now() + 7200000)
+      return Date.now()
     }
   }
 })
@@ -26,7 +30,7 @@ noteSchema.index({
 })
 
 noteSchema.pre('update', () => {
-  this.updated = new Date(Date.now() + 7200000)
+  this.updated = Date.now()
 })
 
 export default mongoose.model('Note', noteSchema)

@@ -14,6 +14,7 @@ class Home extends Component {
     super(props)
     this.prepareNotes = this.prepareNotes.bind(this)
     this.prepareTags = this.prepareTags.bind(this)
+    this.prepareDates = this.prepareDates.bind(this)
     this.noteCard = this.noteCard.bind(this)
     this.tagLink = this.tagLink.bind(this)
   }
@@ -56,6 +57,21 @@ class Home extends Component {
       </div>
     )
   }
+  prepareDates (created, updated, dueDate) {
+    const createdString = new Date(created).toLocaleString('hr-HR', { timeZone: 'Europe/Zagreb' })
+    const updatedString = new Date(updated).toLocaleString('hr-HR', { timeZone: 'Europe/Zagreb' })
+    const dueDateString = new Date(dueDate).toLocaleString('hr-HR', { timeZone: 'Europe/Zagreb' })
+    const daysLeft = Math.floor((dueDate - Date.now()) / 86400000)
+    const hoursLeft = Math.floor((dueDate - Date.now()) / 3600000)
+    return (
+      <small className='text-muted'>
+        <strong>Created:</strong> {`${createdString} | `}
+        <strong>Updated:</strong> {`${updatedString} | `}
+        <strong>Due:</strong> {`${dueDateString} - `}
+        {daysLeft > 0 ? <strong>{`${daysLeft} days left `}</strong> : <strong>{`${hoursLeft} hours left `}</strong>}
+      </small>
+    )
+  }
   tagLink (tag, index) {
     return (
       <NavLink
@@ -76,7 +92,7 @@ class Home extends Component {
           </h5>
           {this.prepareTags(note.tags)}
           <p className='card-text note-body'>{note.body}</p>
-          <p className='card-text no-bot-margin'><small className='text-muted'><strong>Created:</strong> {note.created.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) } | <strong>Updated:</strong> {note.updated.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' }) } | <strong>Due:</strong> {note.dueDate.toLocaleString('hr-HR', { timeZone: 'ETC/GMT-2' })} - <strong>{Math.floor((note.dueDate.getTime() - Date.now()) / 86400000)} days left</strong> </small></p>
+          <p className='card-text no-bot-margin'>{this.prepareDates(note.created, note.updated, note.dueDate)}</p>
         </div>
       </div>
     )

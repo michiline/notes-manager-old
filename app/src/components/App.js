@@ -29,7 +29,7 @@ export default class App extends Component {
     this.setDeleteNoteId = this.setDeleteNoteId.bind(this)
     this.deleteNote = this.deleteNote.bind(this)
     this.state = {
-      notes: parseNotes(JSON.parse(localStorage.getItem('notes'))) || {},
+      notes: JSON.parse(localStorage.getItem('notes')),
       favoriteTags: JSON.parse(localStorage.getItem('favoriteTags')) || [],
       existingTags: [],
       updateNote: {},
@@ -210,19 +210,4 @@ export default class App extends Component {
       </div>
     )
   }
-}
-
-function parseNotes (notes) {
-  const newNotes = Object.entries(notes).reduce((acc, entry) => {
-    acc[entry[0]] = entry[1].map(note => parseDates(note))
-    return acc
-  }, {})
-  return newNotes
-}
-
-function parseDates (note) {
-  note.created = new Date(note.created.substr(0, note.created.length - 5))
-  note.updated = new Date(note.updated.substr(0, note.updated.length - 5))
-  note.dueDate = new Date(note.dueDate.substr(0, note.dueDate.length - 5))
-  return note
 }

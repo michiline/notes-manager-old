@@ -145,6 +145,5 @@ export default class Create extends Component {
 
 function getMilliseconds (date, time) {
   const split = date.toJSON().split('T')
-  const newDate = new Date(`${split[0]}T${time}:00`)
-  return newDate.getTime() + 7200000
+  return new Date(`${split[0]}T${time}:00`).getTime()
 }
