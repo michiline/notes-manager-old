@@ -81,6 +81,9 @@ html, body{
 .bg-blue {
   background-color: rgba(0,0,255,0.125) !important;
 }
+.bg-grey {
+  background-color: rgba(105,105,105,0.125) !important;
+}
 
 img:hover {
   cursor: pointer;

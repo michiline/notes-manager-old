@@ -27,10 +27,13 @@ function prepareDates (note) {
 
 function cardClass (note) {
   const daysLeft = Math.floor((note.dueDate - Date.now()) / 86400000)
-  if (daysLeft > 0 && daysLeft <= 3) {
+  if (note.done) {
+    return 'card bg-grey'
+  }
+  if (daysLeft >= 0 && daysLeft <= 3) {
     return 'card bg-red'
   }
-  if (daysLeft > 0 && daysLeft <= 7) {
+  if (daysLeft > 4 && daysLeft <= 7) {
     return 'card bg-yellow'
   }
   if (daysLeft > 7) {

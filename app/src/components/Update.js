@@ -41,7 +41,7 @@ export default class Update extends Component {
     this.cancel = this.cancel.bind(this)
   }
   render () {
-    if (!this.state.body) {
+    if (!this.state.tags) {
       return (
         <div className='container-fluid'>
           <div className='row'>
@@ -162,12 +162,17 @@ export default class Update extends Component {
   async update (e) {
     e.preventDefault()
     try {
-      await this.props.update(this.props.updateNote.id, {
+      let data = {
         title: this.state.title,
         tags: this.state.tags.concat(this.state.newTags),
-        body: this.state.body,
-        dueDate: getMilliseconds(this.state.date, this.state.time)
-      })
+        body: this.state.body
+      }
+      if (this.state.dueDate) {
+        data.dueDate = getMilliseconds(this.state.date, this.state.time)
+      } else {
+        data.dueDate = 0
+      }
+      await this.props.update(this.props.updateNote.id, data)
       if (this.props.favoriteTags.length > 0) {
         this.props.history.push(`/#${this.props.favoriteTags[0]}`)
       }
