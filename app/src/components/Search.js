@@ -88,7 +88,8 @@ export default class Search extends Component {
     try {
       await this.props.search({
         tags: this.state.tags,
-        words: splitString(this.state.words)
+        words: splitString(this.state.words),
+        done: this.props.showDone
       })
     } catch (err) {
       console.log(err)

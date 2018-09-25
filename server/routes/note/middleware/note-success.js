@@ -44,6 +44,7 @@ function mapNote (note) {
     body: note.body,
     dueDate: note.dueDate,
     created: note.created,
-    updated: note.updated
+    updated: note.updated,
+    done: note.done
   }
 }

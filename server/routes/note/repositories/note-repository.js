@@ -8,12 +8,16 @@ export default {
   async get (query) {
     let queries = []
     if (query.words) {
-      queries.push({ $match: { $text: { $search: query.words.join(' ') } } })
+      const words = query.words.replace('/,/g', ' ')
+      queries.push({ $match: { $text: { $search: words } } })
     }
     if (query.tags) {
-      queries.push({ $match: { tags: { $all: query.tags } } })
+      queries.push({ $match: { tags: { $all: query.tags.split(',') } } })
     }
-    queries.push({ $project: { _id: 0, id: '$_id', title: 1, tags: 1, body: 1, timeConstraint: 1, dueDate: 1, created: 1, updated: 1 } })
+    if (query.done && query.done === 'false') {
+      queries.push({ $match: { done: false } })
+    }
+    queries.push({ $project: { _id: 0, id: '$_id', title: 1, tags: 1, body: 1, timeConstraint: 1, dueDate: 1, created: 1, updated: 1, done: 1 } })
     if (query.skip) {
       queries.push({ $skip: Number.parseInt(query.skip) })
     }

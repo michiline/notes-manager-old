@@ -21,6 +21,10 @@ const noteSchema = new Schema({
     default: () => {
       return Date.now()
     }
+  },
+  done: {
+    type: Boolean,
+    default: false
   }
 })
 

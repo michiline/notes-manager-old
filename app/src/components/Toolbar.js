@@ -32,7 +32,7 @@ class Toolbar extends Component {
                 <p className={pathname === '/create' ? 'nav-item nav-link active' : 'nav-item nav-link'} onClick={e => this.linkTo(e, '/create')}>+</p>
                 {this.props.favoriteTags.map((tag, index) => this.tagsToLinks(tag, index))}
                 <p className={pathname === '/search' ? 'nav-item nav-link active' : 'nav-item nav-link'} onClick={e => this.linkTo(e, '/search')}><img src={searchImg} alt='search' /></p>
-                <p className={pathname === '/' && hash === '#settings' ? 'nav-item nav-link active' : 'nav-item nav-link'} onClick={e => this.linkTo(e, '/#settings')}><img src={settingsImg} alt='search' /></p>
+                <p className={pathname === '/' && hash === '#settings' ? 'nav-item nav-link active' : 'nav-item nav-link'} onClick={e => this.linkTo(e, '/#settings')}><img src={settingsImg} alt='settings' /></p>
               </div>
             </nav>
           </div>
@@ -41,7 +41,21 @@ class Toolbar extends Component {
           <div className='col-lg'>
             <div className='tab-content'>
               <div className={pathname === '/' && hash === '#settings' ? 'tab-pane fade show active' : 'tab-pane fade show'}>
-                <HomeTagsTypeAhead favoriteTags={this.props.favoriteTags} existingTags={this.props.existingTags} saveNewFavoriteTags={this.props.saveNewFavoriteTags} />
+                <div className='container-fluid'>
+                  <div className='row'>
+                    <div className='col-lg'>
+                      <HomeTagsTypeAhead favoriteTags={this.props.favoriteTags} existingTags={this.props.existingTags} saveNewFavoriteTags={this.props.saveNewFavoriteTags} />
+                    </div>
+                  </div>
+                  <div className='row'>
+                    <div className='col-lg'>
+                      <div className='custom-control custom-checkbox'>
+                        <input checked={this.props.showDone} onChange={e => this.props.toggleShowDone()} type='checkbox' className='custom-control-input' id='showDone' />
+                        <label className='custom-control-label' htmlFor='showDone'>Show finished notes</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

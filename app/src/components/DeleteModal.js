@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import 'react-day-picker/lib/style.css'
 
 import '../css/App.css'
 

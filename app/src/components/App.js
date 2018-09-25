@@ -26,6 +26,9 @@ export default class App extends Component {
     this.getHashtagLinkNotes = this.getHashtagLinkNotes.bind(this)
     this.prepareUpdateNote = this.prepareUpdateNote.bind(this)
     this.prepareTags = this.prepareTags.bind(this)
+    this.toggleShowDone = this.toggleShowDone.bind(this)
+    this.setDoneNoteId = this.setDoneNoteId.bind(this)
+    this.markDone = this.markDone.bind(this)
     this.setDeleteNoteId = this.setDeleteNoteId.bind(this)
     this.deleteNote = this.deleteNote.bind(this)
     this.state = {
@@ -34,12 +37,21 @@ export default class App extends Component {
       existingTags: [],
       updateNote: {},
       searchNotes: [],
-      deleteNoteId: ''
+      deleteNoteId: '',
+      doneNoteId: '',
+      showDone: localStorage.getItem('showDone') === 'true'
     }
   }
   async componentDidMount () {
     this.refreshNotes()
     this.getExistingTags()
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.showDone !== this.state.showDone) {
+      this.refreshNotes()
+      this.getExistingTags()
+    }
   }
   render () {
     return (
@@ -47,13 +59,18 @@ export default class App extends Component {
         <Toolbar
           favoriteTags={this.state.favoriteTags}
           existingTags={this.state.existingTags}
-          saveNewFavoriteTags={this.saveNewFavoriteTags} />
+          saveNewFavoriteTags={this.saveNewFavoriteTags}
+          toggleShowDone={this.toggleShowDone}
+          showDone={this.state.showDone} />
         <NoteList
           notes={this.state.notes}
           getHashtagLinkNotes={this.getHashtagLinkNotes}
+          doneNoteId={this.state.doneNoteId}
           deleteNoteId={this.state.deleteNoteId}
+          setDoneNoteId={this.setDoneNoteId}
           setDeleteNoteId={this.setDeleteNoteId}
-          deleteNote={this.deleteNote} />
+          deleteNote={this.deleteNote}
+          markDone={this.markDone} />
         <Switch>
           <Route exact path='/update/:id' component={(props) => {
             this.prepareUpdateNote(props.match.params.id)
@@ -82,7 +99,8 @@ export default class App extends Component {
               history={props.history}
               deleteNoteId={this.state.deleteNoteId}
               setDeleteNoteId={this.setDeleteNoteId}
-              deleteNote={this.deleteNote} />} />
+              deleteNote={this.deleteNote}
+              showDone={this.state.showDone} />} />
         </Switch>
       </div>
     )
@@ -115,6 +133,28 @@ export default class App extends Component {
     })
   }
 
+  setDoneNoteId (id) {
+    this.setState({
+      doneNoteId: id
+    })
+  }
+
+  toggleShowDone () {
+    localStorage.setItem('showDone', !this.state.showDone)
+    this.setState({
+      showDone: !this.state.showDone
+    })
+  }
+
+  async markDone () {
+    await this.api.update(this.state.doneNoteId, { done: true })
+    this.setState({
+      doneNoteId: ''
+    })
+    this.refreshNotes()
+    this.getExistingTags()
+  }
+
   async deleteNote () {
     await this.api.delete(this.state.deleteNoteId)
     this.setState({
@@ -125,9 +165,9 @@ export default class App extends Component {
   }
 
   async getHashtagLinkNotes (tag) {
-    console.log('get')
     const res = await this.api.get({
-      tags: [tag]
+      tags: [tag],
+      done: this.state.showDone
     })
     let notes = this.state.notes
     notes[tag] = res.data
@@ -137,8 +177,7 @@ export default class App extends Component {
   }
 
   async refreshNotes () {
-    console.log('ref')
-    let notesPromise = this.state.favoriteTags.map(tag => this.api.get({ tags: [tag] }))
+    let notesPromise = this.state.favoriteTags.map(tag => this.api.get({ tags: [tag], done: this.state.showDone }))
     let notesArr = await Promise.all(notesPromise)
     let notes = {}
     this.state.favoriteTags.forEach((tag, index) => {
@@ -158,7 +197,7 @@ export default class App extends Component {
   }
 
   async saveNewFavoriteTags (favoriteTags) {
-    let notesPromise = favoriteTags.map(tag => this.api.get({ tags: [tag] }))
+    let notesPromise = favoriteTags.map(tag => this.api.get({ tags: [tag], done: this.state.showDone }))
     let notesArr = await Promise.all(notesPromise)
     let notes = {}
     favoriteTags.forEach((tag, index) => {

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import DeleteModal from './DeleteModal'
+import DoneModal from './DoneModal'
 import { prepareDates, cardClass } from '../utils/utils'
 import '../css/App.css'
 
@@ -36,6 +37,10 @@ class Home extends Component {
           deleteNoteId={this.props.deleteNoteId}
           setDeleteNoteId={this.props.setDeleteNoteId}
           deleteNote={this.props.deleteNote} />
+        <DoneModal
+          doneNoteId={this.props.doneNoteId}
+          setDoneNoteId={this.props.setDoneNoteId}
+          markDone={this.props.markDone} />
       </div>
     )
   }
@@ -74,6 +79,7 @@ class Home extends Component {
           <h5 className='card-title note-title'>{note.title}
             <a data-toggle='tab' href={'/update/' + note.id}><img className='noteImg' src={updateImg} alt='edit' /></a>
             <img className='noteImg' src={deleteImg} alt='delete' onClick={e => this.props.setDeleteNoteId(note.id)} />
+            {!note.done && <img className='noteImg' src={doneImg} alt='done' onClick={e => this.props.setDoneNoteId(note.id)} />}
           </h5>
           {this.prepareTags(note.tags)}
           <p className='card-text note-body'>{note.body}</p>
@@ -83,5 +89,4 @@ class Home extends Component {
     )
   }
 }
-
 export default withRouter(Home)

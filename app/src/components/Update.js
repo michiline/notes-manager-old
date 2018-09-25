@@ -20,7 +20,6 @@ export default class Update extends Component {
         time: parseTime(this.props.updateNote.dueDate)
       }
     } else {
-      console.log('was here')
       this.state = {
         title: this.props.updateNote.title,
         tags: this.props.updateNote.tags,
@@ -90,7 +89,7 @@ export default class Update extends Component {
               <div className='form-group row'>
                 <div className='col-lg-2'>
                   <div className='custom-control custom-checkbox'>
-                    <input value={this.state.dueDate} onChange={e => this.checkDueDate(e)} type='checkbox' className='custom-control-input' id='customCheck1' />
+                    <input checked={this.state.dueDate} onChange={e => this.checkDueDate(e)} type='checkbox' className='custom-control-input' id='customCheck1' />
                     <label className='custom-control-label' htmlFor='customCheck1'>Due Date</label>
                   </div>
                 </div>
@@ -197,7 +196,6 @@ function getMilliseconds (date, time) {
 
 function parseDate (date) {
   if (!date) {
-    console.log('was here')
     return new Date(Date.now())
   }
   return new Date(date)

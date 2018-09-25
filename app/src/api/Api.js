@@ -20,9 +20,8 @@ export default class Api {
   async get (params) {
     const res = await this.axios({
       method: 'get',
-      url: '/api/note' + addParams(params)
+      url: '/api/note' + queryUrl(params)
     })
-    res.data.data = res.data.data.map(note => parseDates(note))
     return res.data
   }
 
@@ -52,37 +51,19 @@ export default class Api {
   }
 }
 
-function addParams (params) {
-  if (!params.tags && !params.words) {
-    return ''
-  }
-  let paramsString = ''
-  if (params.tags && params.tags.length > 0) {
-    paramsString += '?tags[]=' + params.tags[0]
-    params.tags.splice(0, 1)
-    if (params.tags.length > 0) {
-      paramsString = params.tags.reduce((acc, tag) => {
-        return acc + '&tags[]=' + tag
-      }, paramsString)
+function queryUrl (params) {
+  let first = true
+  const url = Object.entries(params).reduce((url, [key, value]) => {
+    if (value.length === 0) {
+      return url
     }
-  }
-  if (params.words && params.words.length > 0) {
-    if (paramsString.length === 0) {
-      paramsString += '?words[]=' + params.words[0]
-      params.words.splice(0, 1)
+    if (first) {
+      first = false
+      url += `?${key}=${value}`
+    } else {
+      url += `&${key}=${value}`
     }
-    if (params.words.length > 0) {
-      paramsString = params.words.reduce((acc, word) => {
-        return acc + '&words[]=' + word
-      }, paramsString)
-    }
-  }
-  return paramsString
-}
-
-function parseDates (note) {
-  // note.created = new Date(note.created.substr(0, note.created.length - 5))
-  // note.updated = new Date(note.updated.substr(0, note.updated.length - 5))
-  // note.dueDate = new Date(note.dueDate.substr(0, note.dueDate.length - 5))
-  return note
+    return url
+  }, '')
+  return url
 }

@@ -66,8 +66,8 @@ export default class Create extends Component {
               <div className='form-group row'>
                 <div className='col-lg-2'>
                   <div className='custom-control custom-checkbox'>
-                    <input onChange={e => this.checkDueDate(e)} type='checkbox' className='custom-control-input' id='customCheck1' />
-                    <label className='custom-control-label' htmlFor='customCheck1'>Due Date</label>
+                    <input onChange={e => this.checkDueDate(e)} type='checkbox' className='custom-control-input' id='checkDueDate' />
+                    <label className='custom-control-label' htmlFor='checkDueDate'>Due Date</label>
                   </div>
                 </div>
               </div>
